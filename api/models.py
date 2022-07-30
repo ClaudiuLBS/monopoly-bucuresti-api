@@ -37,5 +37,8 @@ class Property(models.Model):
   houses        = models.IntegerField(default=0)
   game_session  = models.ForeignKey(GameSession, on_delete=models.CASCADE, null=True)
 
+  class Meta:
+    verbose_name_plural = 'Properties'
+    
   def __str__(self) -> str:
     return f'{self.owner} - {self.neighbourhood}: {self.houses}'
