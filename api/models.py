@@ -1,5 +1,4 @@
 from django.db import models
-from django.utils import timezone
 
 
 class GameSession(models.Model):
@@ -10,13 +9,14 @@ class GameSession(models.Model):
     return f'Game session no. {self.pk} - {self.code}'
 
 
-class NeighbourHood(models.Model):
+class Neighbourhood(models.Model):
   name          = models.CharField(max_length=255)
   color         = models.CharField(max_length=9)
   price         = models.IntegerField(default=0)
   rent          = models.IntegerField(default=0)
   house_price   = models.IntegerField(default=0)
-  
+  coordinates   = models.TextField(null=True)
+
   def __str__(self) -> str:
     return str(self.name)
 
@@ -32,9 +32,10 @@ class Player(models.Model):
 
 
 class Property(models.Model):
-  neighbourHood = models.ForeignKey(NeighbourHood, on_delete=models.CASCADE)
-  owner         = models.ForeignKey(Player, on_delete=models.CASCADE)
+  neighbourhood = models.ForeignKey(Neighbourhood, on_delete=models.CASCADE)
+  owner         = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)
   houses        = models.IntegerField(default=0)
-  
+  game_session  = models.ForeignKey(GameSession, on_delete=models.CASCADE, null=True)
+
   def __str__(self) -> str:
-    return f'{self.owner} - {self.neighbourHood}: {self.houses}'
+    return f'{self.owner} - {self.neighbourhood}: {self.houses}'

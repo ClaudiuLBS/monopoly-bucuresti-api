@@ -10,7 +10,7 @@ post http://127.0.0.1:8000/api/join-session/
 Content-Type: application/json
 
 {
-  "name": "johnny",
+  "name": "cristi",
   "code": "1831"
 }
 
