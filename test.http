@@ -1,0 +1,31 @@
+post http://127.0.0.1:8000/api/create-session/
+Content-Type: application/json
+
+{
+  "name": "Costel"
+}
+
+###
+post http://127.0.0.1:8000/api/join-session/
+Content-Type: application/json
+
+{
+  "name": "johnny",
+  "code": "1831"
+}
+
+###
+post http://127.0.0.1:8000/api/start-session/
+Content-Type: application/json
+
+{
+  "code": "1831"
+}
+
+###
+post http://127.0.0.1:8000/api/end-session/
+Content-Type: application/json
+
+{
+  "code": "1831"
+}

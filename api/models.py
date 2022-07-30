@@ -1,13 +1,13 @@
-from datetime import datetime
 from django.db import models
+from django.utils import timezone
 
 
 class GameSession(models.Model):
-  start_date    = models.DateTimeField(default=datetime.now())
+  start_date    = models.DateTimeField(null=True, blank=True)
   code          = models.CharField(max_length=4)
-
+  
   def __str__(self) -> str:
-    return f'Game session {self.pk}'
+    return f'Game session no. {self.pk} - {self.code}'
 
 
 class NeighbourHood(models.Model):
