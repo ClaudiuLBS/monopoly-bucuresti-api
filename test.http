@@ -11,7 +11,7 @@ Content-Type: application/json
 
 {
   "name": "cristi",
-  "code": "1831"
+  "code": "2855"
 }
 
 ###
@@ -29,3 +29,18 @@ Content-Type: application/json
 {
   "code": "1831"
 }
+
+###
+post http://127.0.0.1:8000/api/find-location/
+Content-Type: application/json
+
+{
+  "latitude": 44.41899784481032,
+  "longitude": 26.023442594619166,
+  "player_id": 9
+}
+
+
+###
+get http://127.0.0.1:8000/api/test/
+

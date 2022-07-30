@@ -4,7 +4,10 @@ from random import randint
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+from shapely.geometry import Point
+from shapely.geometry.polygon import Polygon
 
+from api.utils import buy_property, pay_rent
 from .models import Player, GameSession, Neighbourhood, Property
 
 
@@ -91,3 +94,36 @@ def end_session(request):
     return JsonResponse({'message': 'session ended successfully'})
   except:
     return JsonResponse({'error': 'session does not exist'})
+
+
+
+def test(request):
+  # x = buy_property(9, 1)
+  x = pay_rent(10, 1)
+  return JsonResponse({'success': x})
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def find_location(request):
+  body_unicode = request.body.decode('utf-8')
+  body = json.loads(body_unicode)
+
+  if 'latitude' not in body.keys() or 'longitude' not in body.keys() or 'player_id' not in body.keys():
+    return JsonResponse({"error": "latitude, longitude and player_id required"})
+
+  point = Point(body['latitude'], body['longitude'])
+  player = Player.objects.get(pk=body['player_id'])
+
+  neighbourhoods = Neighbourhood.objects.all()
+  for item in neighbourhoods:
+    coordinates = [(float(x.split(',')[0]), float(x.split(',')[1])) for x in item.coordinates.split((' ')) if len(x.split(',')) == 2]
+    polygon = Polygon(coordinates)
+    if polygon.contains(point):
+      owner = Property.objects.get(neighbourhood=item, game_session=player.game_session).owner
+      if owner:
+        return JsonResponse({'neighbourhood_id': item.pk, 'owner': owner.pk})
+      else:
+        return JsonResponse({'neighbourhood_id': item.pk, 'owner': None})
+
+  return JsonResponse({'neighbourhood_id': None, 'owner': None})

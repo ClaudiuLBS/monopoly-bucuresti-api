@@ -6,18 +6,20 @@ def buy_property(player_id, neighbourhood_id):
   
   # If no money
   if player.money < neighbourhood.price:
-    return False
+    return 'no money'
     
   # If neighbourhood is owned
-  if Property.objects.filter(neighbourhood=neighbourhood, game_session=player.game_session):
-    return False
+  property = Property.objects.get(neighbourhood=neighbourhood, game_session = player.game_session)
+  if property.owner:
+    return 'unavailable'
   
-  property = Property(owner=player, neighbourhood=neighbourhood, game_session = player.game_session)
+  property.owner = player
   property.save()
   player.money -= neighbourhood.price
   player.save()
   
-  return True
+  return 'ok'
+
 
 def pay_rent(player_id, neighbourhood_id):
   player = Player.objects.get(pk=player_id)
@@ -26,7 +28,6 @@ def pay_rent(player_id, neighbourhood_id):
   owner = property.owner
 
   rent_price = neighbourhood.rent
-
   if player.money < rent_price:
     return False
   
