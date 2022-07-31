@@ -1,7 +1,15 @@
-from django.urls import path
+from django.urls import path, include
 from . import views
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'players', views.PlayerViewSet)
+router.register(r'neighbourhoods', views.NeighbourhoodViewSet)
+router.register(r'properties', views.PropertyViewSet)
+router.register(r'game_sessions', views.GameSessionViewSet)
 
 urlpatterns = [
+  path('', include(router.urls)),
   path('create-session/', views.create_session, name='create-session'),
   path('join-session/', views.join_session, name='join-session'),
   path('start-session/', views.start_session, name='start-session'),

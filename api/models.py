@@ -41,4 +41,4 @@ class Property(models.Model):
     verbose_name_plural = 'Properties'
     
   def __str__(self) -> str:
-    return f'{self.owner} - {self.neighbourhood}: {self.houses}'
+    return f'{self.game_session.code}, {self.owner} - {self.neighbourhood}: {self.houses}'

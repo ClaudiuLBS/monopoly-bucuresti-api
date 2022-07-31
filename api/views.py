@@ -6,11 +6,30 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
-
+from rest_framework import viewsets
+from .serializers import PlayerSerializer, GameSessionSerializer, NeighbourhoodSerializer, PropertySerializer
+from .models import Player, GameSession, Neighbourhood, Property
 from api.utils import extract_coords_from_neighbourhood
 
-from .models import Player, GameSession, Neighbourhood, Property
+#  REST ENDPOINTS
+class PlayerViewSet(viewsets.ModelViewSet):
+  queryset = Player.objects.all()
+  serializer_class = PlayerSerializer
 
+class GameSessionViewSet(viewsets.ModelViewSet):
+  queryset = GameSession.objects.all()
+  serializer_class = GameSessionSerializer
+  
+class PropertyViewSet(viewsets.ModelViewSet):
+  queryset = Property.objects.all()
+  serializer_class = PropertySerializer
+
+class NeighbourhoodViewSet(viewsets.ModelViewSet):
+  queryset = Neighbourhood.objects.all()
+  serializer_class = NeighbourhoodSerializer
+
+
+# SERVICES
 
 @csrf_exempt
 @require_http_methods(["POST"])
