@@ -127,3 +127,65 @@ def find_location(request):
         return JsonResponse({'neighbourhood_id': item.pk, 'owner': None})
 
   return JsonResponse({'neighbourhood_id': None, 'owner': None})
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def buy_property(request):
+  body_unicode = request.body.decode('utf-8')
+  body = json.loads(body_unicode)
+
+  if 'player_id' not in body.keys() or 'neighbourhood_id' not in body.keys():
+    return JsonResponse({"error": "player_id and neighbourhood_id required"})
+
+  player_id = body['player_id'] 
+  neighbourhood_id = body['neighbourhood_id']
+  
+  player = Player.objects.get(pk=player_id)
+  neighbourhood = Neighbourhood.objects.get(pk=neighbourhood_id)
+  
+  # If no money
+  if player.money < neighbourhood.price:
+    return JsonResponse({'error': 'No money'})
+    
+  # If neighbourhood is owned
+  property = Property.objects.get(neighbourhood=neighbourhood, game_session = player.game_session)
+  if property.owner:
+    return JsonResponse({'error': 'Property unavailable'}) 
+  
+  property.owner = player
+  property.save()
+  player.money -= neighbourhood.price
+  player.save()
+  
+  return JsonResponse({'property_id': property.pk})
+
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def pay_rent(request):
+  body_unicode = request.body.decode('utf-8')
+  body = json.loads(body_unicode)
+
+  if 'player_id' not in body.keys() or 'neighbourhood_id' not in body.keys():
+    return JsonResponse({'error': 'player_id and neighbourhood_id required'})
+
+  player_id = body['player_id'] 
+  neighbourhood_id = body['neighbourhood_id']
+  
+  player = Player.objects.get(pk=player_id)
+  neighbourhood = Neighbourhood.objects.get(pk=neighbourhood_id)
+  property = Property.objects.get(neighbourhood=neighbourhood, game_session=player.game_session)
+  owner = property.owner
+
+  rent_price = neighbourhood.rent
+  if player.money < rent_price:
+    return JsonResponse({'error': 'Not enough money to pay rent'})
+  
+  owner.money += rent_price
+  owner.save()
+  player.money -= rent_price
+  player.save()
+  
+  return JsonResponse({{'money': player.money}})

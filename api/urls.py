@@ -7,5 +7,8 @@ urlpatterns = [
   path('start-session/', views.start_session, name='start-session'),
   path('end-session/', views.end_session, name='end-session'),
   path('find-location/', views.find_location, name='find-location'),
+  path('buy-property/', views.buy_property, name='buy-property'),
+  path('pay-rent/', views.pay_rent, name='pay-rent'),
+
   path('test/', views.test, name='test'),
 ]
