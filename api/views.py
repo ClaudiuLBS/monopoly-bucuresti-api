@@ -7,7 +7,6 @@ from django.views.decorators.http import require_http_methods
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
 
-from api.utils import buy_property, pay_rent
 from .models import Player, GameSession, Neighbourhood, Property
 
 
@@ -94,13 +93,6 @@ def end_session(request):
     return JsonResponse({'message': 'session ended successfully'})
   except:
     return JsonResponse({'error': 'session does not exist'})
-
-
-
-def test(request):
-  # x = buy_property(9, 1)
-  x = pay_rent(10, 1)
-  return JsonResponse({'success': x})
 
 
 @csrf_exempt

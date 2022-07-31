@@ -9,6 +9,4 @@ urlpatterns = [
   path('find-location/', views.find_location, name='find-location'),
   path('buy-property/', views.buy_property, name='buy-property'),
   path('pay-rent/', views.pay_rent, name='pay-rent'),
-
-  path('test/', views.test, name='test'),
 ]
