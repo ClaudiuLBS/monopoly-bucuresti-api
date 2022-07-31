@@ -7,6 +7,8 @@ from django.views.decorators.http import require_http_methods
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
 
+from api.utils import extract_coords_from_neighbourhood
+
 from .models import Player, GameSession, Neighbourhood, Property
 
 
@@ -109,7 +111,7 @@ def find_location(request):
 
   neighbourhoods = Neighbourhood.objects.all()
   for item in neighbourhoods:
-    coordinates = [(float(x.split(',')[0]), float(x.split(',')[1])) for x in item.coordinates.split((' ')) if len(x.split(',')) == 2]
+    coordinates = extract_coords_from_neighbourhood(item)
     polygon = Polygon(coordinates)
     if polygon.contains(point):
       owner = Property.objects.get(neighbourhood=item, game_session=player.game_session).owner
@@ -181,3 +183,24 @@ def pay_rent(request):
   player.save()
   
   return JsonResponse({{'money': player.money}})
+
+
+def neighbourhoods_paths(request, code):
+  neighbourhoods = Neighbourhood.objects.all()
+  paths = []
+  game_session = GameSession.objects.get(code=code)
+  for item in neighbourhoods:
+    coordinates_arr = extract_coords_from_neighbourhood(item)
+    map_coords = [{'latitude': x[0], 'longitude': x[1]} for x in coordinates_arr]
+
+    property = Property.objects.get(game_session=game_session, neighbourhood=item)
+    owner = None
+    if property.owner:
+      owner = property.owner.pk
+    paths.append({
+      'name': item.name,
+      'owner': owner,
+      'coords': map_coords
+    })
+  
+  return JsonResponse(paths, safe=False)
