@@ -26,7 +26,8 @@ class Player(models.Model):
   money         = models.IntegerField(default=1500)
   owner         = models.BooleanField(default=False)
   game_session  = models.ForeignKey(GameSession, on_delete=models.CASCADE)
-
+  color         = models.CharField(max_length=9, default='#3aeb3444')
+  
   def __str__(self) -> str:
     return str(self.name)
 
