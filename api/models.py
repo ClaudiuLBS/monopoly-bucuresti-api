@@ -9,7 +9,7 @@ class GameSession(models.Model):
     return f'Game session no. {self.pk} - {self.code}'
 
 
-class Neighbourhood(models.Model):
+class Land(models.Model):
   name          = models.CharField(max_length=255)
   color         = models.CharField(max_length=9)
   price         = models.IntegerField(default=0)
@@ -26,14 +26,14 @@ class Player(models.Model):
   money         = models.IntegerField(default=1500)
   owner         = models.BooleanField(default=False)
   game_session  = models.ForeignKey(GameSession, on_delete=models.CASCADE)
-  color         = models.CharField(max_length=9, default='#3aeb3444')
+  color         = models.CharField(max_length=9, default='#3aeb34')
   
   def __str__(self) -> str:
     return str(self.name)
 
 
 class Property(models.Model):
-  neighbourhood = models.ForeignKey(Neighbourhood, on_delete=models.CASCADE)
+  land          = models.ForeignKey(Land, on_delete=models.CASCADE)
   owner         = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)
   houses        = models.IntegerField(default=0)
   game_session  = models.ForeignKey(GameSession, on_delete=models.CASCADE, null=True)
@@ -42,4 +42,4 @@ class Property(models.Model):
     verbose_name_plural = 'Properties'
     
   def __str__(self) -> str:
-    return f'{self.game_session.code}, {self.owner} - {self.neighbourhood}: {self.houses}'
+    return f'{self.game_session.code}, {self.owner} - {self.land}: {self.houses}'

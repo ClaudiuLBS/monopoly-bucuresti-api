@@ -1,11 +1,11 @@
-from .models import Neighbourhood
+from .models import Land
 
-def extract_coords_from_neighbourhood(neighboorhood: Neighbourhood):
+def extract_coords_from_land(land: Land):
   coordinates = [
     (
       float(x.split(',')[0]), 
       float(x.split(',')[1])
-    ) for x in neighboorhood.coordinates.split((' ')) 
+    ) for x in land.coordinates.split((' ')) 
       if len(x.split(',')) == 2
   ]
   return coordinates

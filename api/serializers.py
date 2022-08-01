@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import GameSession, Neighbourhood, Player, Property
+from .models import GameSession, Land, Player, Property
 
 
 class PlayerSerializer(serializers.ModelSerializer):
@@ -21,7 +21,7 @@ class PropertySerializer(serializers.ModelSerializer):
     fields = ('__all__')
 
 
-class NeighbourhoodSerializer(serializers.ModelSerializer):
+class LandSerializer(serializers.ModelSerializer):
   class Meta:
-    model = Neighbourhood
+    model = Land
     fields = ('__all__')

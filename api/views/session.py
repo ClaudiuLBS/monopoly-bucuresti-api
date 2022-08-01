@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 
-from ..models import Player, GameSession, Neighbourhood, Property
+from ..models import Player, GameSession, Land, Property
 
 
 @csrf_exempt
@@ -24,9 +24,9 @@ def create_session(request):
   player = Player(name=body['name'], owner=True, game_session=game_session, color=body['color'])
   player.save()
   
-  neighbourhoods = Neighbourhood.objects.all()
-  for neighbourhood in neighbourhoods:
-    property = Property(owner=None, neighbourhood=neighbourhood, game_session=game_session)
+  lands = Land.objects.all()
+  for land in lands:
+    property = Property(owner=None, land=land, game_session=game_session)
     property.save()
 
   return JsonResponse({'code': game_code, 'player_id': player.pk})

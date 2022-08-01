@@ -1,22 +1,23 @@
 from django.http import JsonResponse
-from ..models import Player, GameSession, Neighbourhood, Property
-from api.utils import extract_coords_from_neighbourhood
+from ..models import Player, GameSession, Land, Property
+from api.utils import extract_coords_from_land
 
 
-def neighbourhoods_paths(request, code):
-  neighbourhoods = Neighbourhood.objects.all()
+def lands_paths(request, code):
+  lands = Land.objects.all()
   paths = []
   game_session = GameSession.objects.get(code=code)
-  for item in neighbourhoods:
-    coordinates_arr = extract_coords_from_neighbourhood(item)
+  for item in lands:
+    coordinates_arr = extract_coords_from_land(item)
     map_coords = [{'latitude': x[0], 'longitude': x[1]} for x in coordinates_arr]
 
-    property = Property.objects.get(game_session=game_session, neighbourhood=item)
+    property = Property.objects.get(game_session=game_session, land=item)
     owner = None
-    fillColor = '#00000044'
+    alpha = '70'
+    fillColor = '#000000' + alpha
     if property.owner:
       owner = property.owner.pk
-      fillColor = property.owner.color
+      fillColor = property.owner.color + alpha
     
     paths.append({
       'name': item.name,

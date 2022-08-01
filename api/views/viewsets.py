@@ -1,7 +1,7 @@
 from rest_framework import viewsets
 
-from ..serializers import PlayerSerializer, GameSessionSerializer, NeighbourhoodSerializer, PropertySerializer
-from ..models import Player, GameSession, Neighbourhood, Property
+from ..serializers import PlayerSerializer, GameSessionSerializer, LandSerializer, PropertySerializer
+from ..models import Player, GameSession, Land, Property
 
 
 class PlayerViewSet(viewsets.ModelViewSet):
@@ -16,7 +16,7 @@ class PropertyViewSet(viewsets.ModelViewSet):
   queryset = Property.objects.all()
   serializer_class = PropertySerializer
 
-class NeighbourhoodViewSet(viewsets.ModelViewSet):
-  queryset = Neighbourhood.objects.all()
-  serializer_class = NeighbourhoodSerializer
+class LandViewSet(viewsets.ModelViewSet):
+  queryset = Land.objects.all()
+  serializer_class = LandSerializer
 
