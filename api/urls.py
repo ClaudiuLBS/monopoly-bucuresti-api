@@ -12,7 +12,7 @@ router.register(r'properties', PropertyViewSet)
 router.register(r'game_sessions', GameSessionViewSet)
 
 urlpatterns = [
-  path('', include(router.urls)),
+  path('api/', include(router.urls)),
   path('create-session/', create_session, name='create-session'),
   path('join-session/', join_session, name='join-session'),
   path('start-session/', start_session, name='start-session'),

@@ -46,3 +46,12 @@ Content-Type: application/json
 ###
 get http://127.0.0.1:8000/api/test/
 
+###
+put http://127.0.0.1:8000/api/players/69/
+Content-Type: application/json
+
+{
+  "latitude": 44.41899784481032,
+  "longitude": 26.023442594619166,
+}
+
