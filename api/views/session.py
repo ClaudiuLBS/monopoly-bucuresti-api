@@ -74,7 +74,7 @@ def start_session(request):
 
     game_session.start_date=datetime.now()
     game_session.save()
-    return JsonResponse({'message': 'session started successfully'})
+    return JsonResponse({'start_date': game_session.start_date})
   except:
     return JsonResponse({'error': 'session does not exist'})
 

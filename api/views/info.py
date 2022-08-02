@@ -47,3 +47,18 @@ def all_players(request, code):
   } for x in players]
 
   return JsonResponse(result, safe=False)
+
+def properties_of(request, id):
+  """Get all properties of a player"""
+  player = Player.objects.get(id)
+  properties = Property.objects.filter(owner=player)
+
+  result = [{
+    'id': x.id,
+    'population': x.population,
+    'soldiers': x.soldiers,
+    'factories': x.factories
+  } for x in properties]
+
+  return JsonResponse(result, safe=False)
+

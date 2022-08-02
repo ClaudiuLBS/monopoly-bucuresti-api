@@ -28,7 +28,7 @@ class Player(models.Model):
   game_session  = models.ForeignKey(GameSession, on_delete=models.CASCADE)
   color         = models.CharField(max_length=9, default='#3aeb34')
   soldiers      = models.IntegerField(default=0)
-  
+
   def __str__(self) -> str:
     return str(self.name)
 
@@ -43,6 +43,7 @@ class Property(models.Model):
 
   class Meta:
     verbose_name_plural = 'Properties'
-    
+  
   def __str__(self) -> str:
-    return f'{self.game_session.code}, {self.owner} - {self.land}: {self.houses}'
+    return f'{self.game_session.code}, {self.owner} - {self.land}'
+  
