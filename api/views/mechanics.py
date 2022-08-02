@@ -8,27 +8,24 @@ from ..models import Player, GameSession, Land, Property
 from api.utils import extract_coords_from_land
 
 
-@csrf_exempt
-@require_http_methods(["POST"])
+@require_http_methods(["GET"])
 def find_location(request):
+  """Get land info by coords in game session, end return property id and land price"""
   body_unicode = request.body.decode('utf-8')
   body = json.loads(body_unicode)
-
+  
   point = Point(body['latitude'], body['longitude'])
-  player = Player.objects.get(pk=body['player_id'])
+  game_session = GameSession.objects.get(code=body['code'])
 
   lands = Land.objects.all()
-  for item in lands:
-    coordinates = extract_coords_from_land(item)
+  for land in lands:
+    coordinates = extract_coords_from_land(land)
     polygon = Polygon(coordinates)
     if polygon.contains(point):
-      owner = Property.objects.get(land=item, game_session=player.game_session).owner
-      if owner:
-        return JsonResponse({'land_id': item.pk, 'owner': owner.pk})
-      else:
-        return JsonResponse({'land_id': item.pk, 'owner': None})
+      property = Property.objects.get(land=land, game_session=game_session)
+      return JsonResponse({'property': property.pk, 'price': land.price})
 
-  return JsonResponse({'land_id': None, 'owner': None})
+  return JsonResponse({'property': None, 'price': None})
 
 
 @csrf_exempt
