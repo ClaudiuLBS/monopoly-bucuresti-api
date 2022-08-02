@@ -11,11 +11,11 @@ class GameSession(models.Model):
 
 class Land(models.Model):
   name          = models.CharField(max_length=255)
-  color         = models.CharField(max_length=9)
   price         = models.IntegerField(default=0)
-  rent          = models.IntegerField(default=0)
-  house_price   = models.IntegerField(default=0)
   coordinates   = models.TextField(null=True)
+  population    = models.IntegerField(default=10000)
+  soldiers      = models.IntegerField(default=100)
+  factories     = models.IntegerField(default=3)
 
   def __str__(self) -> str:
     return str(self.name)
@@ -27,8 +27,6 @@ class Player(models.Model):
   owner         = models.BooleanField(default=False)
   game_session  = models.ForeignKey(GameSession, on_delete=models.CASCADE)
   color         = models.CharField(max_length=9, default='#3aeb34')
-  latitude      = models.FloatField(default=0)
-  longitude      = models.FloatField(default=0)
   
   def __str__(self) -> str:
     return str(self.name)
@@ -37,8 +35,10 @@ class Player(models.Model):
 class Property(models.Model):
   land          = models.ForeignKey(Land, on_delete=models.CASCADE)
   owner         = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)
-  houses        = models.IntegerField(default=0)
   game_session  = models.ForeignKey(GameSession, on_delete=models.CASCADE, null=True)
+  population    = models.IntegerField(default=10000)
+  soldiers      = models.IntegerField(default=100)
+  factories     = models.IntegerField(default=3)
 
   class Meta:
     verbose_name_plural = 'Properties'
