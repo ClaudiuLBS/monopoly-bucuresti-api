@@ -86,12 +86,39 @@ def bring_soldiers(request):
 
   property.save()
   player.save()
-  
+
   return JsonResponse({'soldiers': player.soldiers})
 
 
+@csrf_exempt
+@require_http_methods(["POST"])
+def drop_soldiers(request):
+  """
+    Takes a player, a property where to drop soldiers, and the soldiers count.
+  """
+  body_unicode = request.body.decode('utf-8')
+  body = json.loads(body_unicode)
 
+  player_id = body['player'] 
+  property_id = body['property']
 
+  player = Player.objects.get(pk=player_id)
+  property = Property.objects.get(pk=property_id)
+  soldiers_count = body['count']
+
+  if property.owner != player:
+    return JsonResponse({'error': 'Is not your property'})
+
+  if player.soldiers < soldiers_count:
+    return JsonResponse({'error': 'Not enough soldiers'})
+  
+  property.soldiers += soldiers_count
+  player.soldiers -= soldiers_count
+
+  property.save()
+  player.save()
+
+  return JsonResponse({'soldiers': player.soldiers})
 
 @csrf_exempt
 @require_http_methods(["POST"])
