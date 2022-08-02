@@ -4,8 +4,9 @@ from api.utils import extract_coords_from_land
 
 
 def lands_paths(request, code):
-  lands = Land.objects.all()
+  """Iterate through lands, extract coords, and get property info from specific game session"""
   paths = []
+  lands = Land.objects.all()
   game_session = GameSession.objects.get(code=code)
   for item in lands:
     coordinates_arr = extract_coords_from_land(item)
@@ -24,12 +25,17 @@ def lands_paths(request, code):
       'owner': owner,
       'color': fillColor,
       'coords': map_coords,
+      'price': item.price,
+      'population': property.population,
+      'soldiers': property.soldiers,
+      'population': property.population,
     })
   
   return JsonResponse(paths, safe=False)
 
 
 def all_players(request, code):
+  """Get all players from specific game session"""
   game_session = GameSession.objects.get(code=code)
   players = Player.objects.filter(game_session=game_session)
   
