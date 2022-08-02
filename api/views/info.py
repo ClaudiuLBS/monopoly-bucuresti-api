@@ -50,11 +50,12 @@ def all_players(request, code):
 
 def properties_of(request, id):
   """Get all properties of a player"""
-  player = Player.objects.get(id)
+  player = Player.objects.get(pk=id)
   properties = Property.objects.filter(owner=player)
 
   result = [{
     'id': x.id,
+    'name': x.land.name,
     'population': x.population,
     'soldiers': x.soldiers,
     'factories': x.factories
