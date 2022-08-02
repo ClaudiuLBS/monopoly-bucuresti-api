@@ -57,3 +57,43 @@ def buy_property(request):
   
   return JsonResponse({'property_id': property.pk})
 
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def attack_property(request):
+  """
+    Takes a player and the property to attack.\n
+    The result will be your soldiers minus his soldiers.\n
+    If result is positive you win.
+    The attacked property's soldiers will be abs(result).
+    Player's soldiers will be 0.
+  """
+  body_unicode = request.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  
+  player_id = body['player'] 
+  property_id = body['property']
+
+  player = Player.objects.get(pk=player_id)
+  property = Property.objects.get(pk=property_id)
+
+  if not property.owner:
+    return JsonResponse({'error': 'Property free'})
+  
+  result = player.soldiers - property.soldiers
+  
+  property.soldiers = abs(result)
+  player.soldiers = 0
+
+  if result > 0:
+    property.owner = player
+  
+  player.save()
+  property.save()
+
+  if result > 0:
+    # should send notification to the enemy
+    return JsonResponse({'win': 1})
+  else:
+    return JsonResponse({'win': 0})
