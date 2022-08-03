@@ -4,28 +4,35 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
-from ..models import Player, GameSession, Land, Property
+
 from api.utils import extract_coords_from_land
+from ..models import Player, GameSession, Land, Property
+from .. import notifications
 
 
-@require_http_methods(["GET"])
+@csrf_exempt
+@require_http_methods(["POST"])
 def find_location(request):
   """Get land info by coords in game session, end return property id and land price"""
   body_unicode = request.body.decode('utf-8')
   body = json.loads(body_unicode)
-  
   point = Point(body['latitude'], body['longitude'])
   game_session = GameSession.objects.get(code=body['code'])
-
+  
   lands = Land.objects.all()
   for land in lands:
     coordinates = extract_coords_from_land(land)
     polygon = Polygon(coordinates)
     if polygon.contains(point):
       property = Property.objects.get(land=land, game_session=game_session)
-      return JsonResponse({'property': property.pk, 'price': land.price})
 
-  return JsonResponse({'property': None, 'price': None})
+      owner = None
+      if property.owner:
+        owner = property.owner.name
+  
+      return JsonResponse({'property': property.pk, 'price': land.price, 'name': land.name, 'owner': owner})
+
+  return JsonResponse({'property': None, 'price': None, 'name': None, 'owner': None})
 
 
 @csrf_exempt
@@ -49,13 +56,13 @@ def buy_property(request):
   if player.money < property.land.price:
     return JsonResponse({'error': 'No money'})
     
-  
   property.owner = player
   player.money -= property.land.price
 
   property.save()
   player.save()
-  
+
+  notifications.acquisition(property)
   return JsonResponse({'property_id': property.pk})
 
 
@@ -87,7 +94,7 @@ def bring_soldiers(request):
   property.save()
   player.save()
 
-  return JsonResponse({'soldiers': player.soldiers})
+  return JsonResponse({'soldiers': property.soldiers})
 
 
 @csrf_exempt
@@ -118,7 +125,8 @@ def drop_soldiers(request):
   property.save()
   player.save()
 
-  return JsonResponse({'soldiers': player.soldiers})
+  return JsonResponse({'soldiers': property.soldiers})
+
 
 @csrf_exempt
 @require_http_methods(["POST"])
@@ -138,8 +146,9 @@ def attack_property(request):
 
   player = Player.objects.get(pk=player_id)
   property = Property.objects.get(pk=property_id)
+  property_owner = property.owner
 
-  if not property.owner:
+  if not property_owner:
     return JsonResponse({'error': 'Property free'})
   
   result = player.soldiers - property.soldiers
@@ -154,7 +163,8 @@ def attack_property(request):
   property.save()
 
   if result > 0:
-    # should send notification to the enemy
-    return JsonResponse({'win': 1})
+    notifications.attack(player, property_owner, property, True)
+    return JsonResponse({'win': True, 'soldiers': result})
   else:
-    return JsonResponse({'win': 0})
+    notifications.attack(player, property_owner, property, False)
+    return JsonResponse({'win': False, })

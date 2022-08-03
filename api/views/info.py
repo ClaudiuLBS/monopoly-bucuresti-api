@@ -15,7 +15,7 @@ def lands_paths(request, code):
     property = Property.objects.get(game_session=game_session, land=item)
     owner = None
     alpha = '70'
-    fillColor = '#000000' + alpha
+    fillColor = '#00000040'
     if property.owner:
       owner = property.owner.pk
       fillColor = property.owner.color + alpha

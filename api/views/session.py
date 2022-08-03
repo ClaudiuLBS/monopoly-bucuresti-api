@@ -4,7 +4,7 @@ from random import randint
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-
+from .. import notifications
 from ..models import Player, GameSession, Land, Property
 
 
@@ -24,7 +24,7 @@ def create_session(request):
   game_session.save()
 
   # CREATE PLAYER
-  player = Player(name=body['name'], owner=True, game_session=game_session, color=body['color'])
+  player = Player(name=body['name'], owner=True, game_session=game_session, color=body['color'], push_token=body['token'])
   player.save()
   
   # CREATE PROPERTIES WITH NULL OWNERS
@@ -54,7 +54,7 @@ def join_session(request):
     if game_session.start_date:
       return JsonResponse({'error': 'session allready started'})
     
-    player = Player(name=body['name'], owner=False, game_session=game_session, color=body['color'])
+    player = Player(name=body['name'], owner=False, game_session=game_session, color=body['color'], push_token=body['token'])
     player.save()
     return JsonResponse({'code': body['code'], 'player_id': player.pk})
   except:
@@ -74,6 +74,8 @@ def start_session(request):
 
     game_session.start_date=datetime.now()
     game_session.save()
+    
+    notifications.session_started(game_session.code)
     return JsonResponse({'start_date': game_session.start_date})
   except:
     return JsonResponse({'error': 'session does not exist'})

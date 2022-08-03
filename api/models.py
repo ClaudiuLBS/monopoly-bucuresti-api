@@ -28,6 +28,7 @@ class Player(models.Model):
   game_session  = models.ForeignKey(GameSession, on_delete=models.CASCADE)
   color         = models.CharField(max_length=9, default='#3aeb34')
   soldiers      = models.IntegerField(default=0)
+  push_token    = models.CharField(max_length=255, null=True)
 
   def __str__(self) -> str:
     return str(self.name)
