@@ -28,7 +28,7 @@ def lands_paths(request, code):
       'price': item.price,
       'population': property.population,
       'soldiers': property.soldiers,
-      'population': property.population,
+      'factories': property.factories,
     })
   
   return JsonResponse(paths, safe=False)
