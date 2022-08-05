@@ -1,6 +1,6 @@
 from array import array
 from django.http import JsonResponse
-from ..models import Player, GameSession, Land, Property
+from ..models import GameRules, Player, GameSession, Land, Property
 from api.utils import extract_coords_from_land
 
 
@@ -84,3 +84,9 @@ def properties_of(request, id):
 
   return JsonResponse(result, safe=False)
 
+def game_rules(request, code):
+  game_session = GameSession.objects.get(code=code)
+  game_rules = GameRules.objects.get(game_session)
+
+  return JsonResponse(game_rules, safe=False)
+  

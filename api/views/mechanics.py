@@ -168,3 +168,20 @@ def attack_property(request):
   else:
     notifications.attack(player, property_owner, property, False)
     return JsonResponse({'win': False, })
+
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def buy_factory(request):
+  body_unicode = request.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  
+  player_id = body['player'] 
+  property_id = body['property']
+
+  player = Player.objects.get(pk=player_id)
+  property = Property.objects.get(pk=property_id)
+
+  if property.owner != player:
+    return JsonResponse({'error': 'You dont own this property'})

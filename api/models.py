@@ -48,3 +48,16 @@ class Property(models.Model):
   def __str__(self) -> str:
     return f'{self.game_session.code}, {self.owner} - {self.land}'
   
+  
+class GameRules(models.Model):
+  game_session = models.ForeignKey(GameSession, on_delete=models.CASCADE)
+  factory_price = models.IntegerField(default=100)
+  factory_output = models.IntegerField(default=10)
+  factory_limit = models.IntegerField(default=50)
+  population_rate = models.FloatField(default=0.05)
+  
+  class Meta:
+    verbose_name_plural = 'Game rules'
+
+  def __str__(self) -> str:
+    return f'Rules {self.game_session.code}'

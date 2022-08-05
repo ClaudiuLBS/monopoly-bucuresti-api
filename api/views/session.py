@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from .. import notifications
-from ..models import Player, GameSession, Land, Property
+from ..models import GameRules, Player, GameSession, Land, Property
 
 
 @csrf_exempt
@@ -23,6 +23,10 @@ def create_session(request):
   game_session = GameSession(code=game_code)
   game_session.save()
 
+  # CREATE GAME RULES
+  game_rules = GameRules(game_session=game_session)
+  game_rules.save()
+  
   # CREATE PLAYER
   player = Player(name=body['name'], owner=True, game_session=game_session, color=body['color'], push_token=body['token'])
   player.save()
