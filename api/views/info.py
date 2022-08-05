@@ -92,3 +92,19 @@ def get_game_rules(request, session_id):
 
   return JsonResponse(model_to_dict(game_rules), safe=False)
   
+
+def property_info(request, id):
+  property = Property.objects.get(pk=id)
+  game_rules = GameRules.objects.get(game_session=property.game_session)
+
+  return JsonResponse({
+    'id': property.pk,
+    'price': property.land.price,
+    'population': property.population,
+    'factories': property.factories,
+    'soldiers': property.soldiers,
+    'factory_price': game_rules.factory_price,
+    'factory_limit': game_rules.factory_limit,
+    'money_per_day': game_rules.revenue * property.factories,
+    'population_per_day': property.population * game_rules.population_rate
+  })
