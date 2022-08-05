@@ -14,22 +14,17 @@ def lands_paths(request, code):
     map_coords = [{'latitude': x[0], 'longitude': x[1]} for x in coordinates_arr]
 
     property = Property.objects.get(game_session=game_session, land=item)
-    owner = None
     alpha = '70'
     fillColor = '#00000040'
+
     if property.owner:
-      owner = property.owner.pk
       fillColor = property.owner.color + alpha
     
     paths.append({
+      'id': property.id,
       'name': item.name,
-      'owner': owner,
       'color': fillColor,
       'coords': map_coords,
-      'price': item.price,
-      'population': property.population,
-      'soldiers': property.soldiers,
-      'factories': property.factories,
     })
   
   return JsonResponse(paths, safe=False)
