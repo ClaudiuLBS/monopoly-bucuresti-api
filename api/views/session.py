@@ -51,8 +51,6 @@ def join_session(request):
   
   try:
     game_session = GameSession.objects.get(code=body['code'])
-    if game_session.start_date:
-      return JsonResponse({'error': 'session allready started'})
     
     player = Player(name=body['name'], owner=False, game_session=game_session, color=body['color'], push_token=body['token'])
     player.save()
