@@ -99,14 +99,14 @@ def property_info(request, id):
 
   return JsonResponse({
     'id': property.pk,
-    'owner_id': property.owner,
+    'owner_id': property.owner.pk,
     'owner_name': property.owner.name,
     'price': property.land.price,
     'population': property.population,
+    'population_per_day': int(property.population * game_rules.population_rate),
     'factories': property.factories,
-    'soldiers': property.soldiers,
+    'money_per_day': game_rules.factory_revenue * property.factories,
     'factory_price': game_rules.factory_price,
     'factory_limit': game_rules.factory_limit,
-    'money_per_day': game_rules.revenue * property.factories,
-    'population_per_day': property.population * game_rules.population_rate
+    'soldiers': property.soldiers
   })
