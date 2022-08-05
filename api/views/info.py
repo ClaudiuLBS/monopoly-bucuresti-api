@@ -86,8 +86,8 @@ def properties_of(request, id):
 
   return JsonResponse(result, safe=False)
 
-def get_game_rules(request, code):
-  game_session = GameSession.objects.get(code=code)
+def get_game_rules(request, session_id):
+  game_session = GameSession.objects.get(pk=session_id)
   game_rules = GameRules.objects.get(game_session=game_session)
 
   return JsonResponse(model_to_dict(game_rules), safe=False)

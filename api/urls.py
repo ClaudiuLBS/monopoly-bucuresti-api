@@ -28,5 +28,5 @@ urlpatterns = [
   path('top-players/<int:code>', top_players, name='top-players'),
   path('properties-of/<int:id>', properties_of, name='properties-of'),
   path('player-stats/<int:id>', player_stats, name='player-stats'),
-  path('game-rules/<int:code>', get_game_rules, name='game-rules'),
+  path('game-rules/<int:session_id>', get_game_rules, name='game-rules'),
 ]
