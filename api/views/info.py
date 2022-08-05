@@ -99,6 +99,8 @@ def property_info(request, id):
 
   return JsonResponse({
     'id': property.pk,
+    'owner_id': property.owner,
+    'owner_name': property.owner.name,
     'price': property.land.price,
     'population': property.population,
     'factories': property.factories,
