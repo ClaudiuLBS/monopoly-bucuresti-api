@@ -38,18 +38,25 @@ def lands_paths(request, code):
 def player_stats(request, id):
   player = Player.objects.get(pk=id)
   properties = Property.objects.filter(owner=player)
+  game_rules = GameRules.objects.get(game_session=player.game_session)
 
-  stats = {
-    'money': player.money,
-    'money_per_day': f'{0}/day',
-    'population': sum([x.population for x in properties]),
-    'population_per_day': f'{0}/day',
-    'factories': sum([x.factories for x in properties]),
-    'defense_soldiers': sum([x.soldiers for x in properties]),
-    'active_soldiers': player.soldiers
-  }
-  
-  return JsonResponse(stats, safe=False)
+  factories = sum([x.factories for x in properties])
+  money = player.money
+  money_per_day = factories * game_rules.factory_revenue
+  population = sum([x.population for x in properties])
+  population_per_day = int(population * game_rules.population_rate)
+  defense_soldiers = sum([x.soldiers for x in properties])
+  active_soldiers=player.soldiers
+
+  return JsonResponse({
+    'money': money,
+    'money_per_day': f'{money_per_day}/day',
+    'population': population,
+    'population_per_day': f'{population_per_day}/day',
+    'factories': factories,
+    'defense_soldiers': defense_soldiers,
+    'active_soldiers': active_soldiers
+  }, safe=False)
 
 
 def top_players(request, code):
@@ -84,7 +91,7 @@ def properties_of(request, id):
 
   return JsonResponse(result, safe=False)
 
-def game_rules(request, code):
+def get_game_rules(request, code):
   game_session = GameSession.objects.get(code=code)
   game_rules = GameRules.objects.get(game_session=game_session)
 
