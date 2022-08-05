@@ -7,7 +7,7 @@ from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'players', PlayerViewSet)
-router.register(r'neighbourhoods', LandViewSet)
+router.register(r'lands', LandViewSet)
 router.register(r'properties', PropertyViewSet)
 router.register(r'game_sessions', GameSessionViewSet)
 

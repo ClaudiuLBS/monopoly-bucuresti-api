@@ -86,7 +86,7 @@ def properties_of(request, id):
     'name': x.land.name,
     'population': x.population,
     'soldiers': x.soldiers,
-    'factories': x.factories
+    'factories': x.factories,
   } for x in properties]
 
   return JsonResponse(result, safe=False)
