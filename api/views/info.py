@@ -34,6 +34,23 @@ def lands_paths(request, code):
   return JsonResponse(paths, safe=False)
 
 
+def player_stats(request, id):
+  player = Player.objects.get(pk=id)
+  properties = Property.objects.filter(owner=player)
+
+  stats = {
+    'money': player.money,
+    'money_per_day': 0,
+    'population': sum([x.population for x in properties]),
+    'population_per_day': 0,
+    'factories': sum([x.factories for x in properties]),
+    'defense_soldiers': sum([x.soldiers for x in properties]),
+    'active_soldiers': player.soldiers
+  }
+  
+  return JsonResponse(stats, safe=False)
+
+
 def all_players(request, code):
   """Get all players from specific game session"""
   game_session = GameSession.objects.get(code=code)

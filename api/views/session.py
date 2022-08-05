@@ -69,9 +69,6 @@ def start_session(request):
 
   try:
     game_session = GameSession.objects.get(code=body['code'])
-    if game_session.start_date: 
-      return JsonResponse({'error': 'session allready started'})
-
     game_session.start_date=datetime.now()
     game_session.save()
     

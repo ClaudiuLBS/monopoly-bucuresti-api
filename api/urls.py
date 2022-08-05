@@ -2,7 +2,7 @@ from django.urls import path, include
 from .views.viewsets import PlayerViewSet, LandViewSet, PropertyViewSet, GameSessionViewSet
 from .views.session import create_session, join_session, start_session, end_session
 from .views.mechanics import find_location, buy_property, attack_property, bring_soldiers, drop_soldiers
-from .views.info import all_players, lands_paths, properties_of
+from .views.info import all_players, lands_paths, player_stats, properties_of
 from rest_framework import routers
 
 router = routers.DefaultRouter()
@@ -26,5 +26,6 @@ urlpatterns = [
 
   path('lands-paths/<int:code>', lands_paths, name='lands-paths'),
   path('all-players/<int:code>', all_players, name='all-players'),
-  path('properties-of/<int:id>', properties_of, name='properties-of')
+  path('properties-of/<int:id>', properties_of, name='properties-of'),
+  path('player-stats/<int:id>', player_stats, name='player-stats')
 ]
