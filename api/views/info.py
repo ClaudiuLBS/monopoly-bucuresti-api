@@ -1,8 +1,8 @@
-from array import array
 from django.http import JsonResponse
+from django.forms.models import model_to_dict
+
 from ..models import GameRules, Player, GameSession, Land, Property
 from api.utils import extract_coords_from_land
-
 
 def lands_paths(request, code):
   """Iterate through lands, extract coords, and get property info from specific game session"""
@@ -86,7 +86,7 @@ def properties_of(request, id):
 
 def game_rules(request, code):
   game_session = GameSession.objects.get(code=code)
-  game_rules = GameRules.objects.get(game_session)
+  game_rules = GameRules.objects.get(game_session=game_session)
 
-  return JsonResponse(game_rules, safe=False)
+  return JsonResponse(model_to_dict(game_rules), safe=False)
   
