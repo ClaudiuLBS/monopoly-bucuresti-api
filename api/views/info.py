@@ -1,3 +1,4 @@
+from array import array
 from django.http import JsonResponse
 from ..models import Player, GameSession, Land, Property
 from api.utils import extract_coords_from_land
@@ -40,9 +41,9 @@ def player_stats(request, id):
 
   stats = {
     'money': player.money,
-    'money_per_day': 0,
+    'money_per_day': f'{0}/day',
     'population': sum([x.population for x in properties]),
-    'population_per_day': 0,
+    'population_per_day': f'{0}/day',
     'factories': sum([x.factories for x in properties]),
     'defense_soldiers': sum([x.soldiers for x in properties]),
     'active_soldiers': player.soldiers
@@ -51,16 +52,19 @@ def player_stats(request, id):
   return JsonResponse(stats, safe=False)
 
 
-def all_players(request, code):
-  """Get all players from specific game session"""
+def top_players(request, code):
+  """Get all players from specific game session ordered by properties"""
   game_session = GameSession.objects.get(code=code)
-  players = Player.objects.filter(game_session=game_session)
+  players = [x for x in Player.objects.filter(game_session=game_session)]
+  for player in players:
+    player.properties = len(Property.objects.filter(owner=player))
+
+  players.sort(reverse=True, key=lambda x: x.properties)
   
   result = [{
     'name': x.name,
-    'owner': x.owner,
     'color': x.color,
-    'game_session': x.game_session.pk
+    'properties': x.properties
   } for x in players]
 
   return JsonResponse(result, safe=False)
