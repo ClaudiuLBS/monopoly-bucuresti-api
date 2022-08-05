@@ -6,7 +6,7 @@ from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
 
 from api.utils import extract_coords_from_land
-from ..models import Player, GameSession, Land, Property
+from ..models import GameRules, Player, GameSession, Land, Property
 from .. import notifications
 
 
@@ -167,7 +167,7 @@ def attack_property(request):
     return JsonResponse({'win': True, 'soldiers': result})
   else:
     notifications.attack(player, property_owner, property, False)
-    return JsonResponse({'win': False, })
+    return JsonResponse({'win': False})
 
 
 
@@ -182,6 +182,21 @@ def buy_factory(request):
 
   player = Player.objects.get(pk=player_id)
   property = Property.objects.get(pk=property_id)
+  game_rules = GameRules.objects.get(game_session=player.game_session)
 
   if property.owner != player:
     return JsonResponse({'error': 'You dont own this property'})
+  
+  if property.factories >= game_rules.factory_limit:
+    return JsonResponse({'error': 'Factories limit reached'})
+
+  if game_rules.factory_price > player.money:
+    return JsonResponse({'error': 'You dont have enough money'})
+  
+  player.money -= game_rules.factory_price
+  property.factories += 1
+
+  player.save()
+  property.save()
+
+  return JsonResponse({'factories': property.factories})
