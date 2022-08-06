@@ -49,6 +49,9 @@ def buy_property(request):
   player = Player.objects.get(pk=player_id)
   property = Property.objects.get(pk=property_id)
 
+  if not player.game_session.start_date:
+    return JsonResponse({'error': 'Game not started'}) 
+
   # If land is owned
   if property.owner:
     return JsonResponse({'error': 'Property unavailable'}) 
