@@ -141,3 +141,4 @@ GitHub.sublime-settings
 cartiere.json
 kml_parser.py
 notes.txt
+*.http

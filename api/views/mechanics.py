@@ -201,3 +201,30 @@ def buy_factory(request):
   property.save()
 
   return JsonResponse({'factories': property.factories})
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
+def train_soldiers(request):
+  body_unicode = request.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  
+  player_id = body['player'] 
+  property_id = body['property']
+  count = body['count']
+
+  player = Player.objects.get(pk=player_id)
+  property = Property.objects.get(pk=property_id)
+
+  if property.owner != player:
+    return JsonResponse({'error': 'You dont own this property'})
+
+  if property.population < count:
+    return JsonResponse({'error': 'You dont have enough population'})
+  
+  property.population -= count
+  property.soldiers += count
+
+  property.save()
+
+  return JsonResponse({'soldiers': property.soldiers})
