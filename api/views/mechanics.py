@@ -1,5 +1,6 @@
 import json
 from django.http import JsonResponse
+
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
 from shapely.geometry import Point
@@ -36,7 +37,7 @@ def find_location(request):
 
 
 @csrf_exempt
-@require_http_methods(["POST"])
+# @require_http_methods(["POST"])
 def buy_property(request):
   """takes a player and a property, if the property is free, player buys it"""
   body_unicode = request.body.decode('utf-8')
@@ -63,7 +64,7 @@ def buy_property(request):
   player.save()
 
   notifications.acquisition(property)
-  return JsonResponse({'property_id': property.pk})
+  return JsonResponse({'property_id': 'property.pk'})
 
 
 @csrf_exempt

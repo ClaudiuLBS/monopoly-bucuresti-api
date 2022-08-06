@@ -6,9 +6,9 @@ def session_started(game_session: GameSession):
 
   title = 'O inceput jocu'
   content = 'Intra ma șorlotaurule mai repede'
-  token = item.push_token
 
   for item in players:
+    token = item.push_token
     send_push_notification(token, title, content)
 
 def attack(from_player: Player, to_player: Player, property: Property, win: bool):
