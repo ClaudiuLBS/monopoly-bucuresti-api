@@ -97,10 +97,17 @@ def property_info(request, id):
   property = Property.objects.get(pk=id)
   game_rules = GameRules.objects.get(game_session=property.game_session)
 
+  owner_id = None
+  owner_name = 'Nobody'
+  
+  if property.owner:
+    owner_id = property.owner.pk
+    owner_name = property.owner.name
+
   return JsonResponse({
     'id': property.pk,
-    'owner_id': property.owner.pk,
-    'owner_name': property.owner.name,
+    'owner_id': owner_id,
+    'owner_name': owner_name,
     'price': property.land.price,
     'population': property.population,
     'population_per_day': int(property.population * game_rules.population_rate),
