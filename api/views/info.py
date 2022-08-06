@@ -21,7 +21,7 @@ def lands_paths(request, code):
       fillColor = property.owner.color + alpha
     
     paths.append({
-      'id': property.id,
+      'id': property.pk,
       'name': item.name,
       'color': fillColor,
       'coords': map_coords,
