@@ -1,15 +1,15 @@
 from django.urls import path, include
 from .views.viewsets import PlayerViewSet, LandViewSet, PropertyViewSet, GameSessionViewSet
 from .views.session import create_session, join_session, start_session, end_session
-from .views.mechanics import buy_property, find_location, pay_rent
-from .views.info import all_players, lands_paths
+from .views.mechanics import find_location, buy_property, attack_property, bring_soldiers, drop_soldiers, buy_factory, train_soldiers
+from .views.info import get_game_rules, lands_paths, player_stats, properties_of, property_info, top_players
 from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'players', PlayerViewSet)
-router.register(r'neighbourhoods', LandViewSet)
+router.register(r'lands', LandViewSet)
 router.register(r'properties', PropertyViewSet)
-router.register(r'game_sessions', GameSessionViewSet)
+router.register(r'game-sessions', GameSessionViewSet)
 
 urlpatterns = [
   path('api/', include(router.urls)),
@@ -17,11 +17,19 @@ urlpatterns = [
   path('join-session/', join_session, name='join-session'),
   path('start-session/', start_session, name='start-session'),
   path('end-session/', end_session, name='end-session'),
-
+ 
   path('find-location/', find_location, name='find-location'),
   path('buy-property/', buy_property, name='buy-property'),
-  path('pay-rent/', pay_rent, name='pay-rent'),
+  path('attack-property/', attack_property, name='attack-property'),
+  path('bring-soldiers/', bring_soldiers, name='bring-soldiers'),
+  path('drop-soldiers/', drop_soldiers, name='drop-soldiers'),
+  path('buy-factory/', buy_factory, name='buy-factory'),
+  path('train-soldiers/', train_soldiers, name='buy-factory'),
 
   path('lands-paths/<int:code>', lands_paths, name='lands-paths'),
-  path('all-players/<int:code>', all_players, name='all-players')
+  path('top-players/<int:code>', top_players, name='top-players'),
+  path('properties-of/<int:id>', properties_of, name='properties-of'),
+  path('property-info/<int:id>', property_info, name='property-info'),
+  path('player-stats/<int:id>', player_stats, name='player-stats'),
+  path('game-rules/<int:session_id>', get_game_rules, name='game-rules'),
 ]

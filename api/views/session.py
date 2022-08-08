@@ -4,8 +4,8 @@ from random import randint
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
-
-from ..models import Player, GameSession, Land, Property
+from .. import notifications
+from ..models import GameRules, Player, GameSession, Land, Property
 
 
 @csrf_exempt
@@ -14,19 +14,34 @@ def create_session(request):
   body_unicode = request.body.decode('utf-8')
   body = json.loads(body_unicode)
 
+  # GENERATE GAME SESSION CODE
   game_code = randint(1000, 9999)
   while GameSession.objects.filter(code=game_code):
     game_code = randint(1000, 9999)
 
+  # CREATE SESSION
   game_session = GameSession(code=game_code)
   game_session.save()
 
-  player = Player(name=body['name'], owner=True, game_session=game_session, color=body['color'])
+  # CREATE GAME RULES
+  game_rules = GameRules(game_session=game_session)
+  game_rules.save()
+  
+  # CREATE PLAYER
+  player = Player(name=body['name'], owner=True, game_session=game_session, color=body['color'], push_token=body['token'])
   player.save()
   
+  # CREATE PROPERTIES WITH NULL OWNERS
   lands = Land.objects.all()
   for land in lands:
-    property = Property(owner=None, land=land, game_session=game_session)
+    property = Property(
+      owner=None, 
+      land=land, 
+      game_session=game_session,
+      population=land.population,
+      soldiers=land.soldiers,
+      factories=land.factories,
+    )
     property.save()
 
   return JsonResponse({'code': game_code, 'player_id': player.pk})
@@ -37,13 +52,11 @@ def create_session(request):
 def join_session(request):
   body_unicode = request.body.decode('utf-8')
   body = json.loads(body_unicode)
-
+  
   try:
     game_session = GameSession.objects.get(code=body['code'])
-    if game_session.start_date:
-      return JsonResponse({'error': 'session allready started'})
-
-    player = Player(name=body['name'], owner=False, game_session=game_session, color=body['color'])
+    
+    player = Player(name=body['name'], owner=False, game_session=game_session, color=body['color'], push_token=body['token'])
     player.save()
     return JsonResponse({'code': body['code'], 'player_id': player.pk})
   except:
@@ -58,11 +71,11 @@ def start_session(request):
 
   try:
     game_session = GameSession.objects.get(code=body['code'])
-    if game_session.start_date: 
-      return JsonResponse({'error': 'session allready started'})
     game_session.start_date=datetime.now()
     game_session.save()
-    return JsonResponse({'message': 'session started successfully'})
+    
+    notifications.session_started(game_session.code)
+    return JsonResponse({'start_date': game_session.start_date})
   except:
     return JsonResponse({'error': 'session does not exist'})
 

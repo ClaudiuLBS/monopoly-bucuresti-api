@@ -137,6 +137,8 @@ GitHub.sublime-settings
 .history
 
 # random files
-Cartiere.kml
+*.kml
 cartiere.json
 kml_parser.py
+notes.txt
+*.http
