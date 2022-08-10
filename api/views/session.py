@@ -71,7 +71,15 @@ def leave_session(request):
   
   try:
     player = Player.objects.get(pk=body['player'])
+    game_session = player.game_session
     player.delete()
+    all_players = Player.objects.filter(game_session=game_session)
+    
+    if len(all_players) > 0:
+      all_players[0].owner = True
+    else:
+      game_session.delete()
+      
     return JsonResponse({'error': ''})
   except:
     return JsonResponse({'error': 'player does not exist'})
