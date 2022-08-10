@@ -37,7 +37,7 @@ class Player(models.Model):
 
 class Property(models.Model):
   land          = models.ForeignKey(Land, on_delete=models.CASCADE)
-  owner         = models.ForeignKey(Player, on_delete=models.CASCADE, null=True)
+  owner         = models.ForeignKey(Player, on_delete=models.SET_NULL, null=True)
   game_session  = models.ForeignKey(GameSession, on_delete=models.CASCADE, null=True)
   population    = models.IntegerField(default=10000)
   soldiers      = models.IntegerField(default=100)
