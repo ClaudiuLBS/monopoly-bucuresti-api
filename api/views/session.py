@@ -73,11 +73,12 @@ def leave_session(request):
     player = Player.objects.get(pk=body['player'])
     game_session = player.game_session
     player.delete()
-    all_players = Player.objects.filter(game_session=game_session)
+    all_players = Player.objects.filter(game_session=game_session).exclude(pk=player.pk)
     
     if len(all_players) > 0:
-      all_players[0].owner = True
-      all_players.save()
+      new_owner = all_players[0]
+      new_owner.owner = True
+      new_owner.save()
     else:
       game_session.delete()
 
