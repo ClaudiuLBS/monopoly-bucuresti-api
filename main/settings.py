@@ -84,7 +84,7 @@ DATABASES = {
     'USER': 'claudiu',  
     'PASSWORD': '#Killme12',  
     'OPTIONS': {
-      'driver': 'ODBC Driver 18 for SQL Server',
+      'driver': 'ODBC Driver 17 for SQL Server',
     },
   }
 }
@@ -135,6 +135,3 @@ CORS_ALLOW_CREDENTIALS = True
 CRONJOBS = [
   ('0 7 * * *', 'api.cron.revenue')
 ]
-
-# ssh root@127.0.0.1 -p 37483
-# Docker!
