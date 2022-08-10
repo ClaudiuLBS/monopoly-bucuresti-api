@@ -77,9 +77,10 @@ def leave_session(request):
     
     if len(all_players) > 0:
       all_players[0].owner = True
+      all_players.save()
     else:
       game_session.delete()
-      
+
     return JsonResponse({'error': ''})
   except:
     return JsonResponse({'error': 'player does not exist'})
