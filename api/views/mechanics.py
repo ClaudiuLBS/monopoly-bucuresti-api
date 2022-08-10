@@ -1,3 +1,4 @@
+from datetime import datetime
 import json
 from django.http import JsonResponse
 
@@ -65,6 +66,14 @@ def buy_property(request):
 
   property.save()
   player.save()
+
+  all_properties = Property.objects.all()
+  my_properties = Property.objects.get(owner=player)
+
+  if len(all_properties) == len(my_properties):
+    game_session = player.game_session
+    game_session.end_date = datetime.now()
+    return JsonResponse({'winner': player.pk})
 
   notifications.acquisition(property)
   return JsonResponse({'property_id': 'property.pk'})
@@ -162,9 +171,19 @@ def attack_property(request):
 
   if result > 0:
     property.owner = player
-  
+    
   player.save()
   property.save()
+
+
+  all_properties = Property.objects.all()
+  my_properties = Property.objects.get(owner=player)
+
+  if len(all_properties) == len(my_properties):
+    game_session = player.game_session
+    game_session.end_date = datetime.now()
+    return JsonResponse({'winner': player.pk})
+  
 
   if result > 0:
     notifications.attack(player, property_owner, property, True)

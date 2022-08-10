@@ -3,6 +3,7 @@ from django.db import models
 
 class GameSession(models.Model):
   start_date    = models.DateTimeField(null=True, blank=True)
+  end_date      = models.DateTimeField(null=True, blank=True)
   code          = models.CharField(max_length=4)
   
   def __str__(self) -> str:
