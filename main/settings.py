@@ -75,24 +75,6 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'main.wsgi.application'
 
-
-# Database
-# https://docs.djangoproject.com/en/4.0/ref/settings/#databases
-
-# DATABASES = {  
-#     'default': {  
-#         'ENGINE': 'django.db.backends.mysql',  
-#         'NAME': 'monopoly',  
-#         'USER': 'claudiu',  
-#         'PASSWORD': '#Killme12',  
-#         'HOST': 'monopoly.mysql.database.azure.com',  
-#         'PORT': '3306',  
-#         'OPTIONS': {  
-#             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"  
-#         }  
-#     }  
-# }  
-
 DATABASES = {
   'default': {
     'ENGINE': 'mssql',
@@ -153,3 +135,6 @@ CORS_ALLOW_CREDENTIALS = True
 CRONJOBS = [
   ('0 7 * * *', 'api.cron.revenue')
 ]
+
+# ssh root@127.0.0.1 -p 37483
+# Docker!

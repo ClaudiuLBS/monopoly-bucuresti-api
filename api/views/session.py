@@ -65,6 +65,20 @@ def join_session(request):
 
 @csrf_exempt
 @require_http_methods(["POST"])
+def leave_session(request):
+  body_unicode = request.body.decode('utf-8')
+  body = json.loads(body_unicode)
+  
+  try:
+    player = Player.objects.get(pk=body['player'])
+    player.delete()
+    return JsonResponse({'error': ''})
+  except:
+    return JsonResponse({'error': 'player does not exist'})
+
+
+@csrf_exempt
+@require_http_methods(["POST"])
 def start_session(request):
   body_unicode = request.body.decode('utf-8')
   body = json.loads(body_unicode)
