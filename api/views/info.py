@@ -47,6 +47,7 @@ def top_players(request, code):
   
   result = [{
     'id': x.pk,
+    'owner': x.owner,
     'name': x.name,
     'color': x.color,
     'properties': x.properties
