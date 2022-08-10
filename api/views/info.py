@@ -46,6 +46,7 @@ def top_players(request, code):
   players.sort(reverse=True, key=lambda x: x.properties)
   
   result = [{
+    'id': x.pk,
     'name': x.name,
     'color': x.color,
     'properties': x.properties
