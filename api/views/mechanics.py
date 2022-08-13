@@ -177,7 +177,7 @@ def attack_property(request):
 
 
   all_properties = Property.objects.all()
-  my_properties = Property.objects.get(owner=player)
+  my_properties = Property.objects.filter(owner=player)
 
   if len(all_properties) == len(my_properties):
     game_session = player.game_session
