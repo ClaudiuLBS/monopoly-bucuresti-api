@@ -1,9 +1,9 @@
-from datetime import datetime
-import json
 from django.http import JsonResponse
-
 from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_http_methods
+
+import json
+from datetime import datetime
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
 
@@ -20,7 +20,6 @@ def find_location(request):
   body = json.loads(body_unicode)
   point = Point(body['latitude'], body['longitude'])
   game_session = GameSession.objects.get(code=body['code'])
-  
   lands = Land.objects.all()
   for land in lands:
     coordinates = extract_coords_from_land(land)
