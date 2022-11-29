@@ -76,17 +76,17 @@ TEMPLATES = [
 WSGI_APPLICATION = 'main.wsgi.application'
 
 DATABASES = {
-  'default': {
-    'ENGINE': 'mssql',
-    'NAME': 'claudiu',  
-    'HOST': 'labusclaudiu.database.windows.net',  
-    'PORT': '1433',
-    'USER': 'claudiu',  
-    'PASSWORD': '#Killme12',  
-    'OPTIONS': {
-      'driver': 'ODBC Driver 17 for SQL Server',
-    },
-  }
+  'default': {  
+      'ENGINE': 'django.db.backends.mysql',  
+      'NAME': 'monopoly_buc',  
+      'USER': 'claudiu',  
+      'PASSWORD': 'claudiu',  
+      'HOST': '127.0.0.1',  
+      'PORT': '3306',  
+      'OPTIONS': {  
+        'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"  
+      }  
+  }  
 }
 # Password validation
 # https://docs.djangoproject.com/en/4.0/ref/settings/#auth-password-validators
