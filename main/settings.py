@@ -26,7 +26,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'static/')
 SECRET_KEY = 'django-insecure-+s4z$$um34p9gnxo8bw)++sv#_pnlq6wdu8a7c=2u0l#h#=!qv'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['*']
 
@@ -134,8 +134,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
-
-APPEND_SLASH=False
 
 CRONJOBS = [
   ('0 7 * * *', 'api.cron.revenue')
