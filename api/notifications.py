@@ -4,28 +4,28 @@ from .models import GameSession, Player, Property
 def session_started(game_session: GameSession):
   players = Player.objects.filter(game_session=game_session)
 
-  title = 'O inceput jocu'
-  content = 'Intra ma șorlotaurule mai repede'
+  title = 'The game has started'
+  content = 'Buy your current land as fast as you can'
 
   for item in players:
     token = item.push_token
     send_push_notification(token, title, content)
 
 def attack(from_player: Player, to_player: Player, property: Property, win: bool):
-  title = f"{from_player.name} te-o atacat la {property.land.name} fută-l in gura"
+  title = f"{from_player.name} attacked you at {property.land.name}!"
   token = to_player.push_token
-  content = f"Da din fericire o pierdut fraieru, hai sa vezi câți soldați mai ai"
+  content = f"His attack didn't succed"
 
   if win:
-    content = f"Ți-o luat familia casa nevasta tot, nimic nu mai ai"
+    content = f"You have lost your property!"
 
   send_push_notification(token, title, content)
 
 def acquisition(property: Property):
   players = Player.objects.exclude(pk=property.owner.pk)
   
-  title = f"{property.land.name} o fost cumpărat de {property.owner.name}"
-  content = "Mișcă-te dracului mai repede cu investițiile"
+  title = f"{property.land.name} has been bought by {property.owner.name}"
+  content = "Move faster with your investments!"
 
   for player in players:
     token = player.push_token
